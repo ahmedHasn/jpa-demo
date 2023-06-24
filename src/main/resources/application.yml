@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/letsgo
+    username: emoney
+    password: emoney
+    hikari:
+      auto-commit: false
+  jpa:
+    properties:
+      hibernate:
+        connection:
+#          provider_disable_autocommit: true
+          autocommit: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          time_zone: UTC
+        show_sql: true
+    hibernate:
+      ddl-auto: update
+logging:
+  level:
+    com.zaxxer.hikari: trace
