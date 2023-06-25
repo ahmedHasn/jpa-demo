@@ -6,7 +6,7 @@ on:
       - main
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: letsgo/jpa-demo
+  IMAGE_NAME: ahmedhasn/jpa-demo
   VERSION: latest
 jobs:
   build:
