@@ -51,9 +51,10 @@ jobs:
           cache: maven
 
       - name: Build container image
-        run: |
-          mvn clean install
-          mvn spring-boot:image-build \
-          --imageName 
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} 
+        uses: mamezou-tech/buildpacks-action@master
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tag: ${{ env.VERSION }}
+          path: '.'
+          builder: 'gcr.io/paketo-buildpacks/builder:base'
 
