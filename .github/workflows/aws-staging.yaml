@@ -12,6 +12,9 @@ jobs:
   build:
     name: Build and Test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -32,7 +35,7 @@ jobs:
     name: Package & Publish
     if: ${{ github.ref == 'refs/heads/stagin' }}
     needs: [ build ]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       security-events: write
