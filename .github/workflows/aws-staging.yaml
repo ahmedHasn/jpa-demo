@@ -33,7 +33,7 @@ jobs:
         run: mvn -B package --file pom.xml
   package:
     name: Package & Publish
-    if: ${{ github.ref == 'refs/heads/stagin' }}
+    if: ${{ github.ref == 'refs/heads/staging' }}
     needs: [ build ]
     runs-on: ubuntu-latest
     permissions:
