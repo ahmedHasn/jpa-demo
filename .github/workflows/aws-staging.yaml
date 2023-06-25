@@ -4,10 +4,17 @@ on:
     branches:
       - staging
       - main
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ahmedhasn/jpa-demo
+  VERSION: latest
 jobs:
   build:
     name: Build and Test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -24,4 +31,36 @@ jobs:
 
       - name: Build the application
         run: mvn -B package --file pom.xml
+  package:
+    name: Package & Publish
+    if: ${{ github.ref == 'refs/heads/staging' }}
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+      - name: Set up JDL 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: maven
+      - name: Build container image
+        uses: mamezou-tech/buildpacks-action@master
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tag: ${{ env.VERSION }}
+          path: '.'
+          builder: 'gcr.io/paketo-buildpacks/builder:base'
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GIT_TOKEN }}
+      - name: Publish container image
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
 
