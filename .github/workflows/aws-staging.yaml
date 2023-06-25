@@ -4,6 +4,10 @@ on:
     branches:
       - staging
       - main
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: letsgo/jpa-demo
+  VERSION: latest
 jobs:
   build:
     name: Build and Test
@@ -24,4 +28,29 @@ jobs:
 
       - name: Build the application
         run: mvn -B package --file pom.xml
+  package:
+    name: Package & Publish
+    if: ${{ github.ref == 'refs/heads/stagin' }}
+    needs: [ build ]
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Set up JDL 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: maven
+
+      - name: Build container image
+        run: |
+          mvn clean install
+          mvn spring-boot:image-build \
+          --imageName 
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} 
 
