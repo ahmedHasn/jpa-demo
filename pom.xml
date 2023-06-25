@@ -53,6 +53,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <imageName>${project.name}:${project.version}</imageName>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
