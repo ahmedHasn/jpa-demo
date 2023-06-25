@@ -1,8 +1,9 @@
 name: Build & Deploy - Staging
 on:
   push:
-    - staging
-    - main
+    branches:
+      - staging
+      - main
 jobs:
   build:
     name: Build and Test
